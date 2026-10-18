@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    
+    <!-- Целевая платформа: Windows 11 x64 -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AssemblyName>MiniTimeTracker</AssemblyName>
+    <RootNamespace>MiniTimeTracker</RootNamespace>
+    
+    <!-- Настройки для автономной сборки (Self-Contained Single File) -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    
+    <!-- Метаданные сборки -->
+    <Version>1.0.0</Version>
+    <Description>Минималистичный персональный трекер времени для Windows 11 на C# и WPF</Description>
+  </PropertyGroup>
+
+</Project>
