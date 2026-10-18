@@ -1,0 +1,41 @@
+{
+  "appId": "com.minitimetracker.app",
+  "productName": "MiniTimeTracker",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "dist-electron/**/*",
+    "build/icon.ico",
+    "build/icon.png",
+    "!**/*.test.*",
+    "!**/tsconfig*.json"
+  ],
+  "extraMetadata": {
+    "main": "dist-electron/main.js"
+  },
+  "win": {
+    "icon": "build/icon.ico",
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "dir",
+        "arch": ["x64"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "MiniTimeTracker",
+    "artifactName": "MiniTimeTracker-Setup.exe",
+    "uninstallDisplayName": "MiniTimeTracker"
+  }
+}

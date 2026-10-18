@@ -1,47 +1,64 @@
 import React from 'react';
-import { CheckCircle2, ChevronRight, Laptop, Clock, ShieldCheck, Pin, Minimize2 } from 'lucide-react';
+import {
+  CheckCircle2,
+  Laptop,
+  Clock,
+  ShieldCheck,
+  Pin,
+  Minimize2,
+  Box,
+  Terminal,
+} from 'lucide-react';
 
 export const StagesProgress: React.FC = () => {
   const stages = [
     {
       number: '1',
-      title: 'Этап 1: Проект и интерфейс таймера',
+      title: 'Этап 1: Извлечение UI веб-прототипа',
       icon: Clock,
       status: 'Выполнено',
       details:
-        'Создан проект .NET 10 WPF. Таймер вычисляется по дельте меток времени (DateTimeOffset.UtcNow), исключая рассинхронизацию. Доступны кнопки Start/Stop.',
+        'Интерфейс трекера отделён от тестовой оболочки симуляции рабочего стола. Исходные стили Fluent Acrylic / Mica, скругления, размеры 290×76 px, шрифты и анимации сохранены в точности как в утверждённом эталоне.',
     },
     {
       number: '2',
-      title: 'Этап 2: Активности, сессии и JSON-хранилище',
-      icon: ShieldCheck,
+      title: 'Этап 2: Архитектура Electron и безопасный Bridge',
+      icon: Box,
       status: 'Выполнено',
       details:
-        'Добавлена активность «Работа» по умолчанию, создание пользовательских активностей, история завершённых сессий. Атомарная запись через temp-файл в %LOCALAPPDATA%\\MiniTimeTracker\\data.json с защитой от повреждений.',
+        'Создан главный процесс electron/main.ts и preload-мост electron/preload.ts с contextIsolation: true и nodeIntegration: false. Окно без рамок (frame: false, transparent: true, alwaysOnTop: true).',
     },
     {
       number: '3',
-      title: 'Этап 3: Прозрачность, Topmost и Hover-панель',
-      icon: Pin,
+      title: 'Этап 3: JSON-хранилище %LOCALAPPDATA% и защита данных',
+      icon: ShieldCheck,
       status: 'Выполнено',
       details:
-        'Окно без рамки (WindowStyle=None, AllowsTransparency=True), перемещение мышью (DragMove), переключение поверх всех окон (Topmost), панель управления при наведении курсора.',
+        'Полная совместимость со схемой данных WPF в %LOCALAPPDATA%\\MiniTimeTracker\\data.json. Реализована безопасная атомарная запись через data.json.tmp.* и автоматическое создание бэкапа data.corrupt.*.json при сбоях.',
     },
     {
       number: '4',
-      title: 'Этап 4: Скрытие у края экрана (Edge Docking)',
+      title: 'Этап 4: Автоскрытие у края экрана без мерцания (Anti-Flicker)',
       icon: Minimize2,
       status: 'Выполнено',
       details:
-        'Виджет аккуратно сворачивается за край монитора с выступающей полоской-язычком (Edge Peek Tab) и мгновенно раскрывается при приближении курсора.',
+        'Виджет сворачивается за правый край экрана с видимым язычком (Edge Peek Tab). Внедрена машина состояний с иммунитетом к событиям ухода мыши во время анимации раскрытия и задержкой 300 мс перед сворачиванием.',
     },
     {
       number: '5',
-      title: 'Этап 5: Автономная сборка для Windows 11 x64',
+      title: 'Этап 5: Таймер и бизнес-логика учёта времени',
+      icon: Pin,
+      status: 'Выполнено',
+      details:
+        'Точный расчёт времени исключительно по дельте меток времени ISO 8601 UTC. Запрет одновременных сессий, выбор и создание активностей, сохранение завершённых интервалов и восстановление сессии при перезапуске.',
+    },
+    {
+      number: '6',
+      title: 'Этап 6: Сборка и запуск под Windows 11',
       icon: Laptop,
       status: 'Выполнено',
       details:
-        'Подготовлен скрипт build.cmd и конфигурация .csproj для генерации единого исполняемого файла (Self-Contained Single File win-x64) без сторонних зависимостей.',
+        'Настроены npm-скрипты: npm run build:electron для бандлинга основного и предзагрузочного скриптов esbuild, а также упаковка в автономный дистрибутив Electron.',
     },
   ];
 
@@ -50,14 +67,14 @@ export const StagesProgress: React.FC = () => {
       <div className="flex items-center justify-between pb-3 border-b border-white/10">
         <div>
           <h2 className="text-sm font-semibold text-gray-100">
-            Итеративные этапы реализации (согласно ТЗ)
+            План миграции на Electron (согласно ТЗ)
           </h2>
           <p className="text-[11px] text-gray-400">
-            Все 5 этапов спроектированы, протестированы и готовы к запуску
+            Все 6 этапов миграции с WPF на Electron реализованы, протестированы и верифицированы
           </p>
         </div>
         <span className="rounded-full bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-0.5 font-medium border border-emerald-500/30">
-          5 / 5 этапов готовы
+          6 / 6 этапов готовы
         </span>
       </div>
 

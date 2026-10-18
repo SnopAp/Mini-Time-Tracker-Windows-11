@@ -7,7 +7,10 @@ export interface ProjectFile {
   language: string;
 }
 
-export async function downloadProjectZip(files: ProjectFile[]): Promise<void> {
+export async function downloadProjectZip(
+  files: ProjectFile[],
+  filename = 'MiniTimeTracker-Electron-Win11.zip'
+): Promise<void> {
   const zip = new JSZip();
 
   for (const file of files) {
@@ -18,7 +21,7 @@ export async function downloadProjectZip(files: ProjectFile[]): Promise<void> {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'MiniTimeTracker-WPF-DotNet10.zip';
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

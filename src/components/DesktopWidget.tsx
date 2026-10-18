@@ -9,6 +9,8 @@ import {
   Database,
   ChevronDown,
   Sparkles,
+  Minus,
+  X,
 } from 'lucide-react';
 import {
   ActivityItem,
@@ -120,47 +122,33 @@ export const DesktopWidget: React.FC<DesktopWidgetProps> = ({
 
   const collapseTimeoutRef = useRef<number | null>(null);
   const isOpeningRef = useRef(false);
-  const leftDuringOpeningRef = useRef(false);
 
   const handleMouseEnter = () => {
     if (collapseTimeoutRef.current) {
       clearTimeout(collapseTimeoutRef.current);
       collapseTimeoutRef.current = null;
     }
-    leftDuringOpeningRef.current = false;
     setIsHovered(true);
 
     if (settings.isEdgeDocked && isEdgeCollapsed) {
       isOpeningRef.current = true;
       setIsEdgeCollapsed(false);
 
-      // Once the 280ms expansion animation completes, check if user left during expansion
       window.setTimeout(() => {
         isOpeningRef.current = false;
-        if (leftDuringOpeningRef.current && settings.isEdgeDocked) {
-          collapseTimeoutRef.current = window.setTimeout(() => {
-            setIsEdgeCollapsed(true);
-          }, 300);
-        }
-      }, 280);
+      }, 320);
     }
   };
 
   const handleMouseLeave = () => {
-    // If activity dropdown is open, do not collapse
     if (isActivityDropdownOpen) return;
-
     setIsHovered(false);
 
-    // During opening transition, record that mouse has departed so it collapses after expansion completes
-    if (isOpeningRef.current) {
-      leftDuringOpeningRef.current = true;
-      return;
-    }
+    // If still in opening animation, completely ignore mouseleave
+    if (isOpeningRef.current) return;
 
     if (settings.isEdgeDocked) {
       if (collapseTimeoutRef.current) clearTimeout(collapseTimeoutRef.current);
-      // 300ms debouncing before smoothly sliding back into edge
       collapseTimeoutRef.current = window.setTimeout(() => {
         setIsEdgeCollapsed(true);
       }, 300);
@@ -184,11 +172,11 @@ export const DesktopWidget: React.FC<DesktopWidgetProps> = ({
 
   const isRunning = Boolean(activeSession);
 
-  // When edge-docked, align right edge to screen margin, otherwise use floating pos.x
+  // When edge-docked, flush right edge to screen margin, otherwise use floating pos.x
   const targetX = settings.isEdgeDocked
     ? isEdgeCollapsed
       ? window.innerWidth - 14
-      : window.innerWidth - 298
+      : window.innerWidth - 290
     : pos.x;
 
   return (
@@ -204,9 +192,15 @@ export const DesktopWidget: React.FC<DesktopWidgetProps> = ({
       }}
       className="fixed top-0 left-0 select-none cursor-grab active:cursor-grabbing pointer-events-auto"
     >
+      {/* Right-edge tolerance zone to eliminate dead zones between widget and screen border */}
+      {settings.isEdgeDocked && (
+        <div className="absolute top-0 -right-8 bottom-0 w-12 pointer-events-auto" />
+      )}
       {/* Peek tab indicator on edge when collapsed (always kept in DOM to prevent unmount synthetic leaves) */}
       <div
         title="Наведите курсор, чтобы развернуть виджет"
+        onMouseEnter={handleMouseEnter}
+        onClick={handleMouseEnter}
         className={`absolute -left-3.5 top-1/2 -translate-y-1/2 h-14 w-3.5 rounded-l-md bg-blue-500 shadow-lg shadow-blue-500/50 flex items-center justify-center cursor-pointer transition-all duration-200 z-50 ${
           isEdgeCollapsed && settings.isEdgeDocked
             ? 'opacity-100 pointer-events-auto hover:w-5'
@@ -361,6 +355,40 @@ export const DesktopWidget: React.FC<DesktopWidgetProps> = ({
                 className="p-1 rounded text-gray-400 hover:text-gray-200 hover:bg-white/10 transition-colors"
               >
                 <Database className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Minimize Window */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.electronAPI) {
+                    window.electronAPI.window.minimize();
+                  } else {
+                    handleToggleEdgeDock();
+                  }
+                }}
+                title="Свернуть виджет"
+                aria-label="Свернуть виджет"
+                className="p-1 rounded text-gray-400 hover:text-gray-200 hover:bg-white/10 transition-colors"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Close Window */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.electronAPI) {
+                    window.electronAPI.window.close();
+                  } else {
+                    handleToggleEdgeDock();
+                  }
+                }}
+                title="Закрыть приложение"
+                aria-label="Закрыть приложение"
+                className="p-1 rounded text-gray-400 hover:text-rose-400 hover:bg-rose-500/20 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

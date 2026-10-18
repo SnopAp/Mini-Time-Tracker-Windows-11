@@ -1,6 +1,6 @@
 {
   "name": "Mini Time Tracker Windows 11",
-  "description": "Минималистичный плавающий трекер времени для Windows 11 на C# и WPF с поддержкой сессий, JSON-хранилища и автоскрытия у края экрана.",
+  "description": "Минималистичный плавающий трекер времени для Windows 11 на Electron и TypeScript с поддержкой сессий, JSON-хранилища и автоскрытия у края экрана.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
